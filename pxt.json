@@ -1,12 +1,15 @@
 {
-    "name": "ライントレーサー",
-    "version": "0.0.0",
+    "name": "2",
     "description": "",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "radio": "*",
+        "microphone": "*"
     },
     "files": [
-        "main.ts"
+        "main.blocks",
+        "main.ts",
+        "README.md"
     ],
     "testFiles": [
         "test.ts"
@@ -18,6 +21,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj",
-    "color": "#FFA500"
+    "preferredEditor": "tsprj"
 }
