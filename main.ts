@@ -1,13 +1,3 @@
-/**
- * このファイルを使って、独自のブロックを定義してください。
- * 詳細については、https://makecode.microbit.org/blocks/custom を参照してください。
- */
-
-/**
- * カスタムブロック
- */
-//% weight=100 color=#FFA500 icon="" block="ライントレーサー"
-//% groups=['モーター制御', 'センサー']
 namespace custom {
 
     // タイヤの左右を選択するための設定
