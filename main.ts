@@ -18,6 +18,7 @@ namespace custom {
         Left
     }
 
+    // ===================================
     // ここからモーター制御のブロック
     // ===================================
 
@@ -64,18 +65,19 @@ namespace custom {
     }
 
 
+    // ===================================
     // ここからセンサーのブロック
     // ===================================
 
     /**
-     * 指定した方向のセンサーが白を検出したかどうかを判定します。
-     * センサーのアナログ値が700未満の場合に「白」と判定します。
+     * 指定した方向のセンサーが黒を検出したかどうかを判定します。
+     * センサーのアナログ値が700以上の場合に「黒」と判定します。
      * @param direction 判定するセンサーの方向（右:P0, 左:P1）
      */
-    //% block="%direction のセンサが白だったら"
+    //% block="%direction のセンサが黒だったら"
     //% group="センサー"
-    export function isWhite(direction: SensorDirection): boolean {
-        const threshold = 700; // 白と判定するアナログ値のしきい値
+    export function isBlack(direction: SensorDirection): boolean {
+        const threshold = 700; // 黒と判定するアナログ値のしきい値（この値は環境に応じて調整してください）
         let sensorValue = 0;
 
         if (direction == SensorDirection.Left) {
@@ -86,7 +88,7 @@ namespace custom {
             sensorValue = pins.analogReadPin(AnalogPin.P0);
         }
 
-        // センサーの値がしきい値未満なら true (白)、そうでなければ false を返す
-        return sensorValue < threshold;
+        // センサーの値がしきい値以上なら true (黒)、そうでなければ false を返す
+        return sensorValue >= threshold;
     }
 }
