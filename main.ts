@@ -6,7 +6,7 @@
 /**
  * カスタムブロック
  */
-//% weight=100 color=#0fbc11 icon="" block="カスタムモーター"
+//% weight=100 color=#FFA500 icon="" block="ライントレーサー"
 //% groups=['モーター制御', 'センサー']
 namespace custom {
 
