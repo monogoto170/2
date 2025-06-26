@@ -10,7 +10,23 @@
 //% groups=['モーター制御', 'センサー']
 namespace custom {
 
-    // センサーの方向（左・右）を選択するための設定
+    // タイヤの左右を選択するための設定
+    export enum TireDirection {
+        //% block="右"
+        Right,
+        //% block="左"
+        Left
+    }
+
+    // タイヤの動作を選択するための設定
+    export enum TireAction {
+        //% block="回す"
+        Move,
+        //% block="止める"
+        Stop
+    }
+
+    // センサーの左右を選択するための設定
     export enum SensorDirection {
         //% block="右"
         Right,
@@ -30,38 +46,39 @@ namespace custom {
     //% speed.min=0 speed.max=1023
     //% group="モーター制御"
     export function goStraight(speed: number): void {
-        // 右のタイヤ（P13）を指定された速度で回転
+        // 右のタイヤ（P13）と左のタイヤ（P15）を指定された速度で回転
         pins.analogWritePin(AnalogPin.P13, speed);
-        // 左のタイヤ（P15）を指定された速度で回転
         pins.analogWritePin(AnalogPin.P15, speed);
     }
 
     /**
-     * 指定した速さで右に曲がります。右のタイヤのみが回転し、左のタイヤは停止します。
-     * @param speed 右のタイヤの回転速度 (0-1023)。例: 512
+     * 指定したタイヤを回す、または止めます。
+     * @param direction 操作するタイヤ（右:P13, 左:P15）
+     * @param action 行う動作（回す/止める）
      */
-    //% block="右折する 速さ %speed"
-    //% speed.min=0 speed.max=1023
+    //% block="%direction のタイヤを %action"
     //% group="モーター制御"
-    export function turnRight(speed: number): void {
-        // 右のタイヤ（P13）を指定された速度で回転
-        pins.analogWritePin(AnalogPin.P13, speed);
-        // 左のタイヤ（P15）を停止
-        pins.analogWritePin(AnalogPin.P15, 0);
-    }
+    export function controlTire(direction: TireDirection, action: TireAction): void {
+        const moveSpeed = 500; // 「回す」ときの速さ。この値を変更すると速さが変わります。
+        let targetPin: AnalogPin;
+        let output = 0;
 
-    /**
-     * 指定した速さで左に曲がります。左のタイヤのみが回転し、右のタイヤは停止します。
-     * @param speed 左のタイヤの回転速度 (0-1023)。例: 512
-     */
-    //% block="左折する 速さ %speed"
-    //% speed.min=0 speed.max=1023
-    //% group="モーター制御"
-    export function turnLeft(speed: number): void {
-        // 左のタイヤ（P15）を指定された速度で回転
-        pins.analogWritePin(AnalogPin.P15, speed);
-        // 右のタイヤ（P13）を停止
-        pins.analogWritePin(AnalogPin.P13, 0);
+        // 操作するタイヤのピンを決定
+        if (direction == TireDirection.Left) {
+            targetPin = AnalogPin.P15;
+        } else {
+            targetPin = AnalogPin.P13;
+        }
+
+        // 行う動作に応じて出力を決定
+        if (action == TireAction.Move) {
+            output = moveSpeed;
+        } else {
+            output = 0;
+        }
+
+        // 決定したピンに出力を設定
+        pins.analogWritePin(targetPin, output);
     }
 
 
@@ -77,7 +94,7 @@ namespace custom {
     //% block="%direction のセンサが黒だったら"
     //% group="センサー"
     export function isBlack(direction: SensorDirection): boolean {
-        const threshold = 700; // 黒と判定するアナログ値のしきい値（この値は環境に応じて調整してください）
+        const threshold = 700; // 黒と判定するアナログ値のしきい値
         let sensorValue = 0;
 
         if (direction == SensorDirection.Left) {
@@ -88,7 +105,6 @@ namespace custom {
             sensorValue = pins.analogReadPin(AnalogPin.P0);
         }
 
-        // センサーの値がしきい値以上なら true (黒)、そうでなければ false を返す
         return sensorValue >= threshold;
     }
 }
