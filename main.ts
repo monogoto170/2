@@ -1,18 +1,39 @@
+/**
+ * このファイルを使って、独自のブロックを定義してください。
+ * 詳細については、https://makecode.microbit.org/blocks/custom を参照してください。
+ */
+
+/**
+ * カスタムブロック
+ */
+//% weight=100 color=#0fbc11 icon="" block="カスタムモーター"
+//% groups=['モーター制御', 'センサー']
 namespace custom {
 
-    // ▼▼▼▼▼ 修正箇所 ▼▼▼▼▼
-    // センサーの方向（左・右）を選択するための設定を、namespaceの中に移動しました。
+    // センサーの方向（左・右）を選択するための設定
     export enum SensorDirection {
         //% block="右"
         Right,
         //% block="左"
         Left
     }
-    // ▲▲▲▲▲ 修正箇所 ▲▲▲▲▲
-
 
     // ここからモーター制御のブロック
     // ===================================
+
+    /**
+     * 指定した速さで直進します。左右のタイヤが同じ速度で回転します。
+     * @param speed 回転速度 (0-1023)。例: 800
+     */
+    //% block="直進する 速さ %speed"
+    //% speed.min=0 speed.max=1023
+    //% group="モーター制御"
+    export function goStraight(speed: number): void {
+        // 右のタイヤ（P13）を指定された速度で回転
+        pins.analogWritePin(AnalogPin.P13, speed);
+        // 左のタイヤ（P15）を指定された速度で回転
+        pins.analogWritePin(AnalogPin.P15, speed);
+    }
 
     /**
      * 指定した速さで右に曲がります。右のタイヤのみが回転し、左のタイヤは停止します。
@@ -22,9 +43,9 @@ namespace custom {
     //% speed.min=0 speed.max=1023
     //% group="モーター制御"
     export function turnRight(speed: number): void {
-        // 右のタイヤ（P13）を指定された速度でアナログ出力で回転させる
+        // 右のタイヤ（P13）を指定された速度で回転
         pins.analogWritePin(AnalogPin.P13, speed);
-        // 左のタイヤ（P15）を停止させる
+        // 左のタイヤ（P15）を停止
         pins.analogWritePin(AnalogPin.P15, 0);
     }
 
@@ -36,9 +57,9 @@ namespace custom {
     //% speed.min=0 speed.max=1023
     //% group="モーター制御"
     export function turnLeft(speed: number): void {
-        // 左のタイヤ（P15）を指定された速度でアナログ出力で回転させる
+        // 左のタイヤ（P15）を指定された速度で回転
         pins.analogWritePin(AnalogPin.P15, speed);
-        // 右のタイヤ（P13）を停止させる
+        // 右のタイヤ（P13）を停止
         pins.analogWritePin(AnalogPin.P13, 0);
     }
 
