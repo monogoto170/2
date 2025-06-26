@@ -39,19 +39,6 @@ namespace custom {
     // ===================================
 
     /**
-     * 指定した速さで直進します。左右のタイヤが同じ速度で回転します。
-     * @param speed 回転速度 (0-1023)。例: 800
-     */
-    //% block="直進する 速さ %speed"
-    //% speed.min=0 speed.max=1023
-    //% group="モーター制御"
-    export function goStraight(speed: number): void {
-        // 右のタイヤ（P13）と左のタイヤ（P15）を指定された速度で回転
-        pins.analogWritePin(AnalogPin.P13, speed);
-        pins.analogWritePin(AnalogPin.P15, speed);
-    }
-
-    /**
      * 指定したタイヤを回す、または止めます。
      * @param direction 操作するタイヤ（右:P13, 左:P15）
      * @param action 行う動作（回す/止める）
@@ -87,14 +74,14 @@ namespace custom {
     // ===================================
 
     /**
-     * 指定した方向のセンサーが黒を検出したかどうかを判定します。
-     * センサーのアナログ値が700以上の場合に「黒」と判定します。
+     * 指定した方向のセンサーが白を検出したかどうかを判定します。
+     * センサーのアナログ値が700未満の場合に「白」と判定します。
      * @param direction 判定するセンサーの方向（右:P0, 左:P1）
      */
-    //% block="%direction のセンサが黒だったら"
+    //% block="%direction のセンサが白だったら"
     //% group="センサー"
-    export function isBlack(direction: SensorDirection): boolean {
-        const threshold = 700; // 黒と判定するアナログ値のしきい値
+    export function isWhite(direction: SensorDirection): boolean {
+        const threshold = 700; // 白と判定するアナログ値のしきい値（この値は環境に応じて調整してください）
         let sensorValue = 0;
 
         if (direction == SensorDirection.Left) {
@@ -105,6 +92,7 @@ namespace custom {
             sensorValue = pins.analogReadPin(AnalogPin.P0);
         }
 
-        return sensorValue >= threshold;
+        // センサーの値がしきい値未満なら true (白)、そうでなければ false を返す
+        return sensorValue < threshold;
     }
 }
